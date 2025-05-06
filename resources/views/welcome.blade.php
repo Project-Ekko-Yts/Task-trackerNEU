@@ -8,30 +8,12 @@
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
-    <script>
-      // Dark mode toggle script
-      function toggleDarkMode() {
-        const htmlElement = document.documentElement;
-        const button = document.getElementById('darkModeToggle');
-        htmlElement.classList.toggle('dark');
-        button.textContent = htmlElement.classList.contains('dark') ? 'Light Mode' : 'Dark Mode';
-      }
-
-      // Set initial button text based on current theme
-      document.addEventListener('DOMContentLoaded', () => {
-        const button = document.getElementById('darkModeToggle');
-        button.textContent = document.documentElement.classList.contains('dark') ? 'Light Mode' : 'Dark Mode';
-      });
-
-      function toggleDropdown() {
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        dropdownMenu.classList.toggle('hidden');
-      }
-    </script>
+   
+ 
   </head>
-  <body class="bg-[#f9f9ff] text-[#1e1e2f] font-['Inter'] dark:bg-[#1e1e2f] dark:text-[#f9f9ff]">
+  <body class="bg-white text-[#1e1e2f] font-['Inter'] dark:text-[#f9f9ff]">
     <header class="flex justify-between items-center p-4 bg-white shadow-md dark:bg-[#2e2e3f]">
-      <div class="flex items-center gap-2 text-[#6b46ff] font-bold text-xl">
+      <div class="flex items-center gap-3 text-[#6b46ff] font-bold text-xl">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -51,9 +33,18 @@
         <span>Plan It, Do It</span>
       </div>
       <nav class="flex gap-6">
-        <a href="#home" class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Home</a>
-        <a href="#features" class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Features</a>
-        <a href="#contact" class="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">Contact</a>
+        @if (Route::has('login'))
+              <div class="sm:top-0 sm:right-0 p-6 text-right z-10">
+                @auth
+                  <a href="{{ url('/dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dashboard</a>
+                @else
+                  <a href="{{ route('login') }}" class="ml-4 px-4 py-2 bg-gray-200 text-[#1e1e2f] rounded-md dark:bg-gray-700 dark:text-white">Log in</a>
+                  @if (Route::has('register'))
+                    <a href="{{ route('register') }}" class="ml-4 px-4 py-2 bg-[#7f56d9] text-white rounded-md dark:bg-[#a78bfa]">Register</a>
+                  @endif
+                  @endauth
+                  @endif
+              </div>
       </nav>
      
     </header>
@@ -68,21 +59,42 @@
             Plan It, Do It helps you organize your day efficiently and
             accomplish your tasks.
           </p>
-          <div class="flex">
-            @if (Route::has('login'))
-              <div class="sm:top-0 sm:right-0 p-6 text-right z-10">
-                @auth
-                  <a href="{{ url('/dashboard') }}" class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">Dashboard</a>
-                @else
-                  <a href="{{ route('login') }}" class="ml-4 px-4 py-2 bg-gray-200 text-[#1e1e2f] rounded-md dark:bg-gray-700 dark:text-white">Log in</a>
-                  @if (Route::has('register'))
-                    <a href="{{ route('register') }}" class="ml-4 px-4 py-2 bg-[#7f56d9] text-white rounded-md dark:bg-[#a78bfa]">Register</a>
-                  @endif
-                @endauth
-              </div>
-            @endif
+          <div class="flex mt-3">
+            <button 
+            id="aboutUsButton" 
+            class="px-4 py-2 bg-[#7f56d9] text-white rounded-md dark:bg-[#a78bfa]" 
+            onclick="toggleAboutUsModal()">
+            ABOUT US
+        </button>
           </div>
         </div>
+        <!-- Pop-up Modal -->
+        
+<div 
+id="aboutUsModal" 
+class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50">
+<div class="bg-white dark:bg-[#2e2e3f] rounded-lg shadow-lg p-6 max-w-lg w-full">
+    <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">About Us</h2>
+    <p class="text-gray-600 dark:text-gray-300">
+        Plan It, Do It is your ultimate task management tool designed to help you organize your day, track your progress, and achieve your goals efficiently. Our mission is to empower individuals and teams to stay productive and focused.
+    </p>
+    <div class="mt-6 text-right">
+        <button 
+            class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md dark:bg-gray-700 dark:text-white" 
+            onclick="toggleAboutUsModal()">
+            Close
+        </button>
+    </div>
+</div>
+</div>
+
+<script>
+// Function to toggle the modal visibility
+function toggleAboutUsModal() {
+    const modal = document.getElementById('aboutUsModal');
+    modal.classList.toggle('hidden');
+}
+</script>
 
         <aside class="bg-white shadow-lg rounded-lg p-6 max-w-sm mx-auto mt-8 md:mt-0 dark:bg-[#3e3e4f]">
           <ul class="space-y-4">
@@ -203,37 +215,6 @@
       </button>
     </section>
 
-    <div class="relative">
-      <button
-        id="dropdownButton"
-        class="px-4 py-2 bg-gray-200 text-[#1e1e2f] rounded-md dark:bg-gray-700 dark:text-white"
-        onclick="toggleDropdown()"
-      >
-        Menu
-      </button>
-      <div
-        id="dropdownMenu"
-        class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg dark:bg-[#2e2e3f]"
-      >
-        <a
-          href="#home"
-          class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-        >
-          Home
-        </a>
-        <a
-          href="#features"
-          class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-        >
-          Features
-        </a>
-        <a
-          href="#contact"
-          class="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white"
-        >
-          Contact
-        </a>
-      </div>
-    </div>
+   
   </body>
 </html>
